@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Episodes - Thabani ST Media</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .like-btn {
+      cursor: pointer;
+      color: #555;
+      background-color: #eee;
+      border: none;
+      padding: 5px 10px;
+      margin-top: 10px;
+    }
+    .like-btn.liked {
+      color: red;
+      font-weight: bold;
+    }
+    .comments {
+      margin-top: 15px;
+    }
+    .comment-list {
+      margin-top: 10px;
+      border-left: 2px solid #ddd;
+      padding-left: 10px;
+    }
+    .comment-list p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<script>
+  function logout(){
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
+</script>
+<body>
+  <script>
+    // Check if the user is logged in before showing the page
+    const userRole = localStorage.getItem("userRole");
+    if (!role) {
+      // Redirect to login page if not logged in
+      window.location.href = "login.html";
+    }
+    else if(role!=="user"){
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <div class="branding-bar">
+    <img src="images/Thabani-logo.jpg" alt="Thabani ST Media">
+    <span>It reaches to many</span>
+  </div>
+  <header>
+    <div class="logo"><h1>Thabani ST Media</h1></div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="episodes.html">Episodes</a></li>
+        <li><a href="liked.html">Favourites</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link text-danger" href="#" onclick="logout()">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="episodes">
+      <h2>All Episodes</h2>
+      <div id="episodesContainer"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Thabani ST Media. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const dbRequest = indexedDB.open("PodcastDB", 1);
+    dbRequest.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains("episodes")) {
+        db.createObjectStore("episodes", { keyPath: "id", autoIncrement: true });
+      }
+    };
+
+    dbRequest.onsuccess = (e) => {
+      const db = e.target.result;
+      const tx = db.transaction("episodes", "readonly");
+      const store = tx.objectStore("episodes");
+      const req = store.getAll();
+
+      req.onsuccess = () => {
+        const episodes = req.result;
+        const container = document.getElementById("episodesContainer");
+
+        episodes.forEach(ep => {
+          const div = document.createElement("div");
+          div.className = "episode";
+          div.innerHTML = `
+            <h3>${ep.title}</h3>
+            <p>${ep.description}</p>
+            <video src="${ep.url}" controls width="100%"></video>
+            <button class="like-btn ${JSON.parse(localStorage.getItem('favorites') || '[]').includes(ep.id) ? 'liked' : ''}" onclick="toggleFavorite(${ep.id}, this)">❤</button>
+            <div class="comments">
+              <input type="text" placeholder="Add a comment..." id="comment-${ep.id}" />
+              <button onclick="addComment(${ep.id})">Comment</button>
+              <div class="comment-list" id="comments-${ep.id}"></div>
+            </div>
+          `;
+          container.appendChild(div);
+          loadComments(ep.id);
+        });
+      };
+    };
+
+    function toggleFavorite(id, btn) {
+      let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+      const index = favorites.indexOf(id);
+      const likeCountSpan = document.getElementById(`likes-count-${id}`);
+
+      if (index > -1) {
+        favorites.splice(index, 1);
+        btn.classList.remove("liked");
+      } else {
+        favorites.push(id);
+        btn.classList.add("liked");
+      }
+
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      likeCountSpan.textContent = favorites.includes(id) ? "1 like" : "0 likes";
+    }
+
+    function addComment(id) {
+      const input = document.getElementById(`comment-${id}`);
+      const comment = input.value.trim();
+      if (!comment) return;
+
+      const commentsKey = `comments-${id}`;
+      const allComments = JSON.parse(localStorage.getItem(commentsKey) || "[]");
+      allComments.push(comment);
+      localStorage.setItem(commentsKey, JSON.stringify(allComments));
+      renderComments(id, allComments);
+      input.value = "";
+    }
+
+    function renderComments(id, comments) {
+      const div = document.getElementById(`comments-${id}`);
+      div.innerHTML = ""; // Clear existing
+
+      comments.forEach((comment, index) => {
+        const commentContainer = document.createElement("div");
+        commentContainer.innerHTML = `
+          <p contenteditable="false">${comment}</p>
+          <button onclick="editComment(${id}, ${index})">Edit</button>
+          <button onclick="deleteComment(${id}, ${index})">Delete</button>
+        `;
+        div.appendChild(commentContainer);
+      });
+    }
+
+    function loadComments(id) {
+      const commentsKey = `comments-${id}`;
+      const allComments = JSON.parse(localStorage.getItem(commentsKey) || "[]");
+      renderComments(id, allComments);
+    }
+
+    function editComment(id, index) {
+      const commentsKey = `comments-${id}`;
+      const comments = JSON.parse(localStorage.getItem(commentsKey) || "[]");
+      const newComment = prompt("Edit your comment:", comments[index]);
+      if (newComment !== null && newComment.trim() !== "") {
+        comments[index] = newComment.trim();
+        localStorage.setItem(commentsKey, JSON.stringify(comments));
+        renderComments(id, comments);
+      }
+    }
+
+    function deleteComment(id, index) {
+      const commentsKey = `comments-${id}`;
+      const comments = JSON.parse(localStorage.getItem(commentsKey) || "[]");
+      comments.splice(index, 1);
+      localStorage.setItem(commentsKey, JSON.stringify(comments));
+      renderComments(id, comments);
+    }
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole === "admin") {
+        document.getElementById("userLinks").style.display = "none";
+      } else if (userRole === "user") {
+        document.getElementById("adminLinks").style.display = "none";
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+</body>
+</html>

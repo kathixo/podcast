@@ -1,0 +1,253 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  header {
+    background-color: #000000;
+    color: #f7931e;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 10px 0;
+}
+nav ul li {
+    margin: 0 15px;
+}
+  
+  nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  nav a:hover {
+    color: #f7931e;
+  }
+  main {
+    padding: 20px;
+    text-align: center;
+}
+.hero {
+    margin-bottom: 30px;
+}
+.hero h2 {
+    font-size: 2.5rem;
+}
+.hero p {
+    font-size: 1.2rem;
+}
+  
+  h1, h2, h3 {
+    color: #f7931e;
+  }
+  
+  .episode {
+    background-color: #2a2a2a;
+    border: 1px solid #f7931e;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+  }
+  .subscribe {
+    margin-top: 40px;
+}
+.episodes h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+  
+  .like-btn, .remove-btn {
+    background-color: #f7931e;
+    color: #1a1a1a;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  .like-btn:hover, .remove-btn:hover {
+    background-color: #7b1c1c;
+    color: #ffffff;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 40px;
+    background-color: #000000;
+    color: #ffffff;
+  }
+.like-btn {
+    cursor: pointer;
+    color: #555;
+    background-color: #eee;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 10px;
+  }
+  .like-btn.liked {
+    color: red;
+    font-weight: bold;
+  }
+  .comments {
+    margin-top: 15px;
+  }
+  .comment-list {
+    margin-top: 10px;
+    border-left: 2px solid #ddd;
+    padding-left: 10px;
+  }
+  .comment-list p {
+    margin: 5px 0;
+  }
+body.dark {
+    background-color: #121212;
+    color: #f0f0f0;
+  }
+  
+  body.dark video {
+    border: 1px solid #444;
+  }
+  
+  .dark-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #000;
+    color: #fff;
+    padding: 5px 10px;
+    cursor: pointer;
+    z-index: 999;
+  }
+  .episode {
+    background-color: #f9f9f9;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .like-btn {
+    cursor: pointer;
+    background-color: #ddd;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  .like-btn.liked {
+    color: red;
+    background-color: #ffe6e6;
+  }
+  .comments {
+    margin-top: 15px;
+  }
+  .comments input {
+    padding: 5px;
+    width: 70%;
+    margin-right: 5px;
+  }
+  .comments button {
+    padding: 5px 10px;
+  }
+  .comment-list {
+    margin-top: 10px;
+    border-left: 2px solid #ddd;
+    padding-left: 10px;
+  }
+  .comment-list p {
+    margin: 5px 0;
+  }
+  .episode {
+    background-color: #f9f9f9;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .remove-btn {
+    cursor: pointer;
+    background-color: #ffdddd;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 10px;
+    color: red;
+  }
+  .no-favorites {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 1.2em;
+    color: #888;
+  }
+  .branding-bar {
+    background-color: #000000;
+    color: #f7931e;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 15px;
+    border-bottom: 2px solid #f7931e;
+  }
+  
+  .branding-bar img {
+    height: 50px;
+    width: auto;
+    border-radius: 5px;
+  }
+  
+  .branding-bar span {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  .social-links {
+    margin-top: 20px;
+}
+
+.social-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+}
+
+.social-btn:hover {
+    transform: scale(1.1);
+}
+
+.facebook-btn {
+    background-color: #3b5998; /* Facebook blue */
+}
+
+.tiktok-btn {
+    background-color: #000000; /* TikTok black */
+}
+
+.youtube-btn {
+    background-color: #ff0000; /* YouTube red */
+}

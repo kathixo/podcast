@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thabani ST Media </title>
+  <link rel="stylesheet" href="style.css">
+ 
+</head>
+<script>
+  function logout(){
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
+</script>
+<body>
+  <script>
+    // Check if the user is logged in before showing the page
+    const userRole = localStorage.getItem("userRole");
+    if (!role) {
+      // Redirect to login page if not logged in
+      window.location.href = "login.html";
+    }
+    else if(role!=="user"){
+      window.location.href = "login.html";
+    }
+  </script>
+<body>
+
+  <div class="branding-bar">
+    <img src="images/Thabani-logo.jpg" alt="Thabani ST Media">
+    <span>It reaches to many</span>
+  </div>
+    <header>
+        <div class="logo"><h1>Thabani ST Media</h1></div>
+  <nav>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="episodes.html">Episodes</a></li>
+        <li><a href="liked.html">Favourites</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link text-danger" href="#" onclick="logout()">Logout</a></li>
+      </ul>
+  </nav>
+</header>
+
+<main>
+    <section>
+  <h1>Welcome to Thabani ST Media</h1>
+  <p>Your Weekly Dose Of Insightful Conversations</p>
+  <p>Tune into the latest stories, interviews and trending topics.</p>
+  <a href="episodes.html" class="btn">Browse Episodes</a>
+
+  <body>
+   
+
+    <div class="social-links" style="text-align: center; margin-top: 20px;">
+        <a href="http://facebook.com/share/E7zDghc1rEdqM3xC" target="_blank" class="social-btn facebook-btn">
+            Facebook
+        </a>
+        <a href="https://tiktok.com/@thabani_st?_t=8qrOrt7NZ9q&_ґ=1" target="_blank" class="social-btn tiktok-btn">
+            TikTok
+        </a>
+        <a href="https://youtube.com/@thabanistdlamini?si=z3wDrN4rJBD9Yu9s" target="_blank" class="social-btn youtube-btn">
+            YouTube
+        </a>
+    </div>
+
+  
+</body>
+    </section>
+</main>
+  <footer>
+    <p>&copy; 2025 Thabani ST Media. All rights reserved.</p>
+</footer>
+ 
+  <div class="dark-toggle" onclick="toggleDark()">Toggle Dark Mode</div>
+  <script>
+    function toggleDark() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("darkMode", document.body.classList.contains("dark"));
+    }
+    window.onload = () => {
+      if (localStorage.getItem("darkMode") === "true") {
+        document.body.classList.add("dark");
+      }
+    };
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole === "admin") {
+        document.getElementById("userLinks").style.display = "none";
+      } else if (userRole === "user") {
+        document.getElementById("adminLinks").style.display = "none";
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+</body>
+</html>

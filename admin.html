@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Upload</title>
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+  <script>
+    // Check if the logged-in user has admin rights
+    const role = localStorage.getItem("userRole");
+    if (role !== "admin") {
+      window.location.href = "login.html"; // Redirect to login if not admin
+    }
+
+    // Logout function
+    function logout() {
+      sessionStorage.removeItem("loggedInUser");
+      localStorage.removeItem("userRole");
+      window.location.href = "login.html";
+    }
+    </script>
+    <div class="branding-bar">
+      <img src="images/Thabani-logo.jpg" alt="Thabani ST Media">
+      <span>It reaches to many</span>
+    </div>
+    <header>
+    <div class="logo"><h1>Thabani ST Media</h1></div>
+
+</header>
+<main>
+  <section>
+  <h1>Upload New Episode</h1>
+  <input type="text" id="titleInput" placeholder="Episode Title"><br>
+  <textarea id="descriptionInput" placeholder="Episode Description"></textarea><br>
+  
+  <div id="dropZone">Drag and drop a video here</div>
+  <input type="file" id="fileInput" accept="video/*">
+  <button id="uploadBtn">Upload</button>
+  </section>
+</main>
+
+  <footer>
+    <p>&copy; 2025 Thabani ST Media. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let fileData = null;
+
+    const dropZone = document.getElementById("dropZone");
+    dropZone.addEventListener("dragover", e => {
+      e.preventDefault();
+      dropZone.style.backgroundColor = "#eee";
+    });
+
+    dropZone.addEventListener("dragleave", e => {
+      e.preventDefault();
+      dropZone.style.backgroundColor = "";
+    });
+
+    dropZone.addEventListener("drop", e => {
+      e.preventDefault();
+      dropZone.style.backgroundColor = "";
+      fileData = e.dataTransfer.files[0];
+    });
+
+    document.getElementById("fileInput").addEventListener("change", e => {
+      fileData = e.target.files[0];
+    });
+
+    document.getElementById("uploadBtn").addEventListener("click", () => {
+      const title = document.getElementById("titleInput").value.trim();
+      const description = document.getElementById("descriptionInput").value.trim();
+
+      if (!fileData || !title) {
+        alert("Please provide a title and a video file.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dbRequest = indexedDB.open("PodcastDB", 1);
+        dbRequest.onsuccess = (e) => {
+          const db = e.target.result;
+          const tx = db.transaction("episodes", "readwrite");
+          const store = tx.objectStore("episodes");
+
+          const newEpisode = {
+            title,
+            description,
+            url: reader.result,
+            timestamp: Date.now()
+          };
+
+          store.add(newEpisode);
+          alert("Episode uploaded!");
+        };
+      };
+
+      reader.readAsDataURL(fileData);
+    });
+  </script>
+</body>
+</html>

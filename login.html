@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Login - Thabani ST Media</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    body {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+              url("images/front_page.jpg") no-repeat center center/cover;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+    }
+    .login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+              url("images/front_page.jpg") no-repeat center center/cover;
+}
+
+.login-card {
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.login-title {
+  color: #ce952b;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+  </style>
+</head>
+<body>
+
+
+
+  <div class="container login-container">
+    <div class="login-card col-md-6 col-lg-4">
+      <h3 class="text-center login-title">Welcome!</h3>
+
+      <form id="loginForm">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username:</label>
+          <input type="text" id="username" class="form-control" placeholder="Enter your name" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password:</label>
+          <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="role" class="form-label">Select Role:</label>
+          <select id="role" class="form-select" required>
+            <option value="">Choose...</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+          </select>
+        </div>
+      
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+      </form>
+      <p class = "text-center mt-3">Don't have an account ?<a href="register.html">Register here</a></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+  
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const role = document.getElementById('role').value;
+  
+      if (!role || !username || !password) {
+        alert("Please fill in all fields and select a role.");
+        return;
+      }
+  
+      // ADMIN LOGIN (Hardcoded)
+      if (role === "admin") {
+        const adminUsername = "admin";
+        const adminPassword = "admin123";
+  
+        if (username === adminUsername && password === adminPassword) {
+          localStorage.setItem("loggedInUser", JSON.stringify({ username, role }));
+          localStorage.setItem("userRole", "admin");
+          alert("Admin login successful!");
+          window.location.href = "admin.html";
+          return;
+        } else {
+          alert("Invalid admin credentials.");
+          return;
+        }
+      }
+  
+      // USER LOGIN (Check all registered users)
+      const users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+      const user = users.find(u => u.username === username && u.password === password && u.role === "user");
+  
+      if (user) {
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
+        localStorage.setItem("userRole", "user");
+        alert("Login successful!");
+        window.location.href = "index.html";
+      } else {
+        alert("Invalid username, password, or role.");
+      }
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

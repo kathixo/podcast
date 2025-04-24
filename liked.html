@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Favourites - Thabani ST Media</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .episode {
+      background-color: #f9f9f9;
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .remove-btn {
+      cursor: pointer;
+      background-color: #ffdddd;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-top: 10px;
+      color: red;
+    }
+    .no-favorites {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 1.2em;
+      color: #888;
+    }
+  </style>
+</head>
+<script>
+  function logout(){
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
+</script>
+<body>
+  <script>
+    // Check if the user is logged in before showing the page
+    const userRole = localStorage.getItem("userRole");
+    if (!role) {
+      // Redirect to login page if not logged in
+      window.location.href = "login.html";
+    }
+    else if(role!=="user"){
+      window.location.href = "login.html";
+    }
+  </script>
+  <div class="branding-bar">
+    <img src="images/Thabani-logo.jpg" alt="Thabani ST Media">
+    <span>It reaches to many</span>
+  </div>
+  <header>
+    <div class="logo"><h1>Thabani ST Media</h1></div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="episodes.html">Episodes</a></li>
+        <li><a href="liked.html">Favourites</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link text-danger" href="#" onclick="logout()">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="episodes">
+      <h2>Liked Episodes</h2>
+      <div id="likedContainer"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Thabani ST Media. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const dbRequest = indexedDB.open("PodcastDB", 1);
+
+    dbRequest.onsuccess = (e) => {
+      const db = e.target.result;
+      const tx = db.transaction("episodes", "readonly");
+      const store = tx.objectStore("episodes");
+      const req = store.getAll();
+
+      req.onsuccess = () => {
+        const allEpisodes = req.result;
+        const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+        const likedEpisodes = allEpisodes.filter(ep => favorites.includes(ep.id));
+
+        const container = document.getElementById("likedContainer");
+        container.innerHTML = "";
+
+        if (likedEpisodes.length === 0) {
+          container.innerHTML = '<p class="no-favorites">You have no favourite episodes yet.</p>';
+        } else {
+          likedEpisodes.forEach(ep => {
+            const div = document.createElement("div");
+            div.className = "episode";
+            div.innerHTML = `
+              <h3>${ep.title}</h3>
+              <p>${ep.description}</p>
+              <video src="${ep.url}" controls width="100%"></video>
+              <button class="remove-btn" onclick="removeFavorite(${ep.id}, this)">Remove from Favourites</button>
+            `;
+            container.appendChild(div);
+          });
+        }
+      };
+    };
+
+    function removeFavorite(id, btn) {
+      let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+      favorites = favorites.filter(favId => favId !== id);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      btn.parentElement.remove();
+
+      if (document.querySelectorAll(".episode").length === 0) {
+        document.getElementById("likedContainer").innerHTML = '<p class="no-favorites">You have no favourite episodes yet.</p>';
+      }
+    }
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const userRole = localStorage.getItem("userRole");
+      if (userRole === "admin") {
+        document.getElementById("userLinks").style.display = "none";
+      } else if (userRole === "user") {
+        document.getElementById("adminLinks").style.display = "none";
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+</body>
+</html>
