@@ -41,11 +41,11 @@
   <script>
     // Check if the user is logged in before showing the page
     const userRole = localStorage.getItem("userRole");
-    if (!role) {
+    if (!userRole) {
       // Redirect to login page if not logged in
       window.location.href = "login.html";
     }
-    else if(role!=="user"){
+    else if(userRole !== "user"){
       window.location.href = "login.html";
     }
   </script>
@@ -105,6 +105,7 @@
             <p>${ep.description}</p>
             <video src="${ep.url}" controls width="100%"></video>
             <button class="like-btn ${JSON.parse(localStorage.getItem('favorites') || '[]').includes(ep.id) ? 'liked' : ''}" onclick="toggleFavorite(${ep.id}, this)">❤</button>
+            <span id="likes-count-${ep.id}">${getLikesCount(ep.id)} like${getLikesCount(ep.id) !== 1 ? 's' : ''}</span>
             <div class="comments">
               <input type="text" placeholder="Add a comment..." id="comment-${ep.id}" />
               <button onclick="addComment(${ep.id})">Comment</button>
@@ -131,7 +132,12 @@
       }
 
       localStorage.setItem("favorites", JSON.stringify(favorites));
-      likeCountSpan.textContent = favorites.includes(id) ? "1 like" : "0 likes";
+      likeCountSpan.textContent = `${getLikesCount(id)} like${getLikesCount(id) !== 1 ? 's' : ''}`;
+    }
+
+    function getLikesCount(id) {
+      const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+      return favorites.filter(favId => favId === id).length;
     }
 
     function addComment(id) {

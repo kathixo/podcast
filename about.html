@@ -5,7 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>About</title>
   <link rel="stylesheet" href="style.css">
-   
+  <style>
+    main section {
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    section img {
+      display: block;
+      margin: 20px auto;
+    }
+
+    blockquote {
+      background-color: #0f0f0f;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-left: 5px solid #ce952b;
+      font-style: italic;
+    }
+
+    section h2, section h3 {
+      color: #ce952b;
+      margin-bottom: 15px;
+    }
+
+    a {
+      color: #ce952b;
+    }
+  </style>
 </head>
 <script>
   function logout(){
@@ -15,55 +44,66 @@
 </script>
 <body>
   <script>
-    // Check if the user is logged in before showing the page
-    const userRole = localStorage.getItem("userRole");
-    if (!role) {
-      // Redirect to login page if not logged in
-      window.location.href = "login.html";
-    }
-    else if(role!=="user"){
+    const role = localStorage.getItem("userRole");
+    if (!role || role !== "user") {
       window.location.href = "login.html";
     }
   </script>
-<body>
+
   <div class="branding-bar">
     <img src="images/Thabani-logo.jpg" alt="Thabani ST Media">
     <span>It reaches to many</span>
   </div>
-    <header>
-        <div class="logo"><h1>Thabani ST Media</h1></div>
-  <nav>
-    <ul>
+
+  <header>
+    <div class="logo"><h1>Thabani ST Media</h1></div>
+    <nav>
+      <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="episodes.html">Episodes</a></li>
         <li><a href="liked.html">Favourites</a></li>
         <li><a href="about.html">About</a></li>
         <li class="nav-item"><a class="nav-link text-danger" href="#" onclick="logout()">Logout</a></li>
       </ul>
-  </nav>
-</header>
-<main>
-    <section>
-        <h2>About Us</h2>
-        <p>This podcast covers devotions, motivation and also different discussions on the matters of faith. 90% on Christian Content and 10% on others
-          We appreciate your endless supports. please follow us on our social media platforms..</p>
+    </nav>
+  </header>
 
+  <main>
+    <section>
+      <h2>About Us</h2>
+      <p>This podcast covers devotions, motivation, and different discussions on the matters of faith. 90% Christian content and 10% general motivation. We appreciate your endless support — please follow us on our social media platforms!</p>
     </section>
-</main>
-<footer>
+
+
+    <section>
+      <h3>Our Mission</h3>
+      <p>To reach the hearts of many through stories, devotionals, and conversations that uplift, challenge, and inspire growth in faith and purpose.</p>
+    </section>
+
+    <section>
+      <h3>How It Started</h3>
+      <p>This podcast began with a simple idea — to spread encouragement and spiritual insight through conversation. What started as a personal project has now become a growing platform for positive change.</p>
+    </section>
+
+    <section>
+      <h3>What Listeners Are Saying</h3>
+      <blockquote>"Every episode leaves me feeling motivated!" — Listener A</blockquote>
+      <blockquote>"Finally a podcast that speaks to my faith and everyday life!" — Listener B</blockquote>
+    </section>
+
+    <section>
+      <h3>Connect With Us</h3>
+      <p>Follow us on social media or reach out if you'd like to suggest topics or be a guest on the show!</p>
+      <div class="social-links" style="text-align: center; margin: 40px 0;">
+        <a href="http://facebook.com/share/E7zDghc1rEdqM3xC" target="_blank" class="social-btn facebook-btn">Facebook</a>
+        <a href="https://tiktok.com/@thabani_st?_t=8qrOrt7NZ9q&_r=1" target="_blank" class="social-btn tiktok-btn">TikTok</a>
+        <a href="https://youtube.com/@thabanistdlamini?si=z3wDrN4rJBD9Yu9s" target="_blank" class="social-btn youtube-btn">YouTube</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
     <p>&copy; 2025 Thabani ST Media. All rights reserved.</p>
-</footer>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const userRole = localStorage.getItem("userRole");
-    if (userRole === "admin") {
-      document.getElementById("userLinks").style.display = "none";
-    } else if (userRole === "user") {
-      document.getElementById("adminLinks").style.display = "none";
-    } else {
-      window.location.href = "login.html";
-    }
-  });
-</script>
+  </footer>
 </body>
 </html>

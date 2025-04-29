@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Upload</title>
-  <link rel="stylesheet" href="style.css">
-  
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <script>
@@ -21,32 +20,37 @@
       localStorage.removeItem("userRole");
       window.location.href = "login.html";
     }
-    </script>
-    <div class="branding-bar">
-      <img src="images/Thabani-logo.jpg" alt="Thabani ST Media">
-      <span>It reaches to many</span>
-    </div>
-    <header>
+  </script>
+
+  <div class="branding-bar">
+    <img src="images/Thabani-logo.jpg" alt="Thabani ST Media"/>
+    <span>It reaches to many</span>
+  </div>
+  <header>
     <div class="logo"><h1>Thabani ST Media</h1></div>
     <nav>
       <ul>
         <li class="nav-item"><a class="nav-link text-danger" href="#" onclick="logout()">Logout</a></li>
       </ul>
     </nav>
+  </header>
 
-</header>
+  <main>
+    <section>
+      <h1>Upload New Episode</h1>
+      <input type="text" id="titleInput" placeholder="Episode Title"><br>
+      <textarea id="descriptionInput" placeholder="Episode Description"></textarea><br>
 
-<main>
-  <section>
-  <h1>Upload New Episode</h1>
-  <input type="text" id="titleInput" placeholder="Episode Title"><br>
-  <textarea id="descriptionInput" placeholder="Episode Description"></textarea><br>
-  
-  <div id="dropZone">Drag and drop a video here</div>
-  <input type="file" id="fileInput" accept="video/*">
-  <button id="uploadBtn">Upload</button>
-  </section>
-</main>
+      <div id="dropZone">Drag and drop a video here</div>
+      <input type="file" id="fileInput" accept="video/*">
+      <button id="uploadBtn">Upload</button>
+    </section>
+
+    <section>
+      <h2>Uploaded Episodes</h2>
+      <div id="uploadedEpisodesList"></div>
+    </section>
+  </main>
 
   <footer>
     <p>&copy; 2025 Thabani ST Media. All rights reserved.</p>
@@ -102,11 +106,59 @@
 
           store.add(newEpisode);
           alert("Episode uploaded!");
+          loadEpisodes(); // Refresh the list of episodes after uploading a new one
         };
       };
 
       reader.readAsDataURL(fileData);
     });
+
+    function loadEpisodes() {
+      const dbRequest = indexedDB.open("PodcastDB", 1);
+      dbRequest.onsuccess = (e) => {
+        const db = e.target.result;
+        const tx = db.transaction("episodes", "readonly");
+        const store = tx.objectStore("episodes");
+
+        const request = store.getAll();
+        request.onsuccess = () => {
+          const episodes = request.result;
+          const episodesContainer = document.getElementById("uploadedEpisodesList");
+
+          episodesContainer.innerHTML = ""; // Clear the container first
+
+          episodes.forEach(episode => {
+            const episodeDiv = document.createElement("div");
+            episodeDiv.className = "episode";
+            episodeDiv.innerHTML = `
+              <h3>${episode.title}</h3>
+              <p>${episode.description}</p>
+              <video src="${episode.url}" controls width="100%"></video>
+              <button onclick="deleteEpisode(${episode.id})">Delete</button>
+            `;
+            episodesContainer.appendChild(episodeDiv);
+          });
+        };
+      };
+    }
+
+    function deleteEpisode(id) {
+      const dbRequest = indexedDB.open("PodcastDB", 1);
+      dbRequest.onsuccess = (e) => {
+        const db = e.target.result;
+        const tx = db.transaction("episodes", "readwrite");
+        const store = tx.objectStore("episodes");
+
+        store.delete(id); // Delete the episode from the store
+        alert("Episode deleted!");
+        loadEpisodes(); // Refresh the list of episodes after deletion
+      };
+    }
+
+    // Load the episodes when the page loads
+    window.onload = () => {
+      loadEpisodes();
+    };
   </script>
 </body>
 </html>
